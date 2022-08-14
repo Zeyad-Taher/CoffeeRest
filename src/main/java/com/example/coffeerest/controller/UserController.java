@@ -30,7 +30,7 @@ public class UserController {
         return userService.createNewUser(user);
     }
 
-    @PostMapping(value = "/login")
+    @PostMapping(value = "/authenticate")
     public UserDTO login(@RequestBody UserAuth userAuth){
         return userService.login(userAuth);
     }
