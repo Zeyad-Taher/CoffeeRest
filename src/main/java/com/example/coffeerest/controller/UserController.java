@@ -1,6 +1,7 @@
 package com.example.coffeerest.controller;
 
 import com.example.coffeerest.Entity.User;
+import com.example.coffeerest.dto.UserAuth;
 import com.example.coffeerest.dto.UserDTO;
 import com.example.coffeerest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class UserController {
         return userService.createNewUser(user);
     }
 
-//    @GetMapping(value = "/login")
-//    public UserDTO
+    @PostMapping(value = "/login")
+    public UserDTO login(@RequestBody UserAuth userAuth){
+        return userService.login(userAuth);
+    }
 }

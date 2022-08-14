@@ -1,6 +1,7 @@
 package com.example.coffeerest.service;
 
 import com.example.coffeerest.Entity.User;
+import com.example.coffeerest.dto.UserAuth;
 import com.example.coffeerest.dto.UserDTO;
 import com.example.coffeerest.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
@@ -52,5 +53,27 @@ public class UserService implements UserDetailsService {
         }
 
         return null;
+    }
+
+    public UserDTO login(UserAuth userAuth) {
+        if(userAuth!=null){
+            User user=userRepository.findByUsername(userAuth.getUsername());
+            if(user!=null){
+                if(bcryptPasswordEncoder.matches(userAuth.getPassword(), user.getPassword())){
+                    UserDTO userDto=new UserDTO();
+                    BeanUtils.copyProperties(user,userDto);
+                    return userDto;
+                }
+                else{
+                    return null;
+                }
+            }
+            else{
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
     }
 }
