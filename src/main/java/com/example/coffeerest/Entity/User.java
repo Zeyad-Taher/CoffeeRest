@@ -1,5 +1,6 @@
 package com.example.coffeerest.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,8 +16,23 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "email")
     private String email;
+
+    @Column(name = "String")
+    @JsonIgnore
+    private String password;
+
+    @OneToOne(mappedBy = "user")
+    private CartItem cart;
+
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 }
