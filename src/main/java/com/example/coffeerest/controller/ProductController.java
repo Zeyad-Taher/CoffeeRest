@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 @RestController
-@RequestMapping("/product/v1/")
+@RequestMapping("/product/v1")
 public class ProductController {
     //@Autowired private ProductService productService;
 

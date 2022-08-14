@@ -1,18 +1,21 @@
 package com.example.coffeerest.controller;
 
 import com.example.coffeerest.Entity.User;
+import com.example.coffeerest.dto.UserDTO;
+import com.example.coffeerest.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/user/v1")
 public class UserController {
-
-    //@Autowired private UserService userService;
-
+    @Autowired
+    private UserService userService;
 
     @GetMapping(value = "/profile")
     public User getUser(){
         //TDOD
-        return new User("kofta", "koftaiq@mshwyat.com", "Ba2dones123");
+        return new User("kofta","kofta77", "koftaiq@mshwyat.com", "Ba2dones123");
     }
 
     @PutMapping(value = "/edit")
@@ -20,4 +23,12 @@ public class UserController {
         //TODO
         return usr;
     }
+
+    @PostMapping(value = "/new")
+    public UserDTO createNewUser(@RequestBody User user) {
+        return userService.createNewUser(user);
+    }
+
+//    @GetMapping(value = "/login")
+//    public UserDTO
 }
