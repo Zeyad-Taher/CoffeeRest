@@ -36,4 +36,4 @@ build/
 /src/main/resources/application.properties
 
 ### Ignore media ###
-/product-images
+/product-images/*
