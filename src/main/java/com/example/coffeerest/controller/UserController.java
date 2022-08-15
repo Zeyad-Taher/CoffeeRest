@@ -21,13 +21,12 @@ public class UserController {
     }
 
     @PutMapping(value = "/edit")
-    public User editProfile(@RequestBody User usr){
-        //TODO
-        return usr;
+    public ResponseEntity<?> editProfile(@RequestBody(required=false) User user){
+        return userService.editProfile(user);
     }
 
     @PostMapping(value = "/new")
-    public ResponseEntity<?> createNewUser(@RequestBody User user) {
+    public ResponseEntity<?> createNewUser(@RequestBody(required=false) User user) {
         return userService.createNewUser(user);
     }
 

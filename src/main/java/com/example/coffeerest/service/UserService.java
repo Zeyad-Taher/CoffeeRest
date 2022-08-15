@@ -63,8 +63,10 @@ public class UserService implements UserDetailsService {
                         Errors.USER_EMAIL_ALREADY_EXIST.getMessage()), HttpStatus.BAD_REQUEST);
             }
         }
-
-        return null;
+        else {
+            return new ResponseEntity<>(new ErrorResponse(Errors.USER_IS_MISSING.getCode(),
+                    Errors.USER_IS_MISSING.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     public UserDTO login(UserAuth userAuth) {
@@ -96,5 +98,15 @@ public class UserService implements UserDetailsService {
         UserDTO userDto=new UserDTO();
         BeanUtils.copyProperties(user,userDto);
         return userDto;
+    }
+
+    public ResponseEntity<?> editProfile(User user) {
+        if(user != null) {
+            return new ResponseEntity<>(user,HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(new ErrorResponse(Errors.USER_IS_MISSING.getCode(),
+                    Errors.USER_IS_MISSING.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 }
