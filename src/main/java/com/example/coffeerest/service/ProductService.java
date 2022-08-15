@@ -9,10 +9,10 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import static org.springframework.util.StringUtils.cleanPath;
 
@@ -62,5 +62,15 @@ public class ProductService {
     public boolean deleteProduct(Long id){
         productRepository.deleteById(id);
         return true;
+    }
+
+    public Product getProductByID(Long id) {
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isPresent()){
+            return product.get();
+        }
+        else{
+            return null;
+        }
     }
 }

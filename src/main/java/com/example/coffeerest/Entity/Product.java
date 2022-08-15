@@ -27,9 +27,6 @@ public class Product {
     @Column(name="boughtItemsCount") private Integer boughtItemsCount;
     @Column(name="category") private String category;
 
-    @OneToOne(mappedBy = "product")
-    private CartItem cart;
-
     public Product(String n, float p, String path, float s1, float s2, String desc, String c, int count, String cat) {
         name = n;
         price = p;
