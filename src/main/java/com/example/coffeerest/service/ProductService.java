@@ -37,9 +37,6 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private ServletContext servletContext;
-
     public Iterable<Product> getAllProduct(){
         return productRepository.findAll();
     }
@@ -50,7 +47,12 @@ public class ProductService {
 
     public String addImage(MultipartFile image){
         String fileName = cleanPath(image.getOriginalFilename());
-        String uploadDir = "product-images/" + (productRepository.findTopByOrderByIdDesc().getId() + 1);
+        Product product=productRepository.findTopByOrderByIdDesc();
+        String uploadDir;
+        if(product==null)
+            uploadDir = "product-images/" + 1;
+        else
+            uploadDir = "product-images/" + (product.getId()+1);
         if (!FileUploadUtil.saveFile(uploadDir, fileName, image)){
             return null;
         }
