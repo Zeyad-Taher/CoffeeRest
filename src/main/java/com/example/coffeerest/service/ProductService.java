@@ -3,28 +3,13 @@ package com.example.coffeerest.service;
 import com.example.coffeerest.Entity.Product;
 import com.example.coffeerest.repository.ProductRepository;
 import com.example.coffeerest.utility.FileUploadUtil;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -60,7 +45,7 @@ public class ProductService {
         return upPath.resolve(fileName).toString();
     }
 
-    public Resource getImage(String path) throws IOException {
+    public Resource getImage(String path) {
         try {
             Path file = Paths.get(path);
             Resource resource = new UrlResource(file.toUri());

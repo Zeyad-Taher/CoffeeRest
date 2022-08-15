@@ -3,7 +3,6 @@ package com.example.coffeerest.controller;
 import com.example.coffeerest.Entity.Product;
 import com.example.coffeerest.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 import java.io.IOException;
 
 
@@ -37,7 +35,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/get/image/", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<Resource> getImage(@RequestBody String path) throws IOException {
+    public ResponseEntity<Resource> getImage(@RequestBody String path) {
         Resource file = productService.getImage(path);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
