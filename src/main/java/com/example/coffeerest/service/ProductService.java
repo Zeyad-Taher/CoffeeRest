@@ -30,11 +30,18 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product addProduct(Product product) {
-        return productRepository.save(product);
+    public ResponseEntity<?> addProduct(Product product) {
+        if(product==null) {
+            return new ResponseEntity<>(new ErrorResponse(Errors.PRODUCT_IS_MISSING.getCode(),
+                    Errors.PRODUCT_IS_MISSING.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+        else {
+            Product newProduct = productRepository.save(product);
+            return new ResponseEntity<>(newProduct,HttpStatus.OK);
+        }
     }
 
-    public String addImage(MultipartFile image){
+    public ResponseEntity<?> addImage(MultipartFile image){
         String fileName = cleanPath(image.getOriginalFilename());
         Product product=productRepository.findTopByOrderByIdDesc();
         String uploadDir;
@@ -43,23 +50,29 @@ public class ProductService {
         else
             uploadDir = "product-images/" + (product.getId()+1);
         if (!FileUploadUtil.saveFile(uploadDir, fileName, image)){
-            return null;
+            return new ResponseEntity<>(new ErrorResponse(Errors.FAILED_TO_UPLOAD_IMAGE.getCode(),
+                    Errors.FAILED_TO_UPLOAD_IMAGE.getMessage()), HttpStatus.BAD_REQUEST); //failed to upload image
         }
         Path upPath = Paths.get(uploadDir);
-        return upPath.resolve(fileName).toString();
+        return new ResponseEntity<>(upPath.resolve(fileName).toString(),HttpStatus.OK);
     }
 
-    public Resource getImage(String path) {
+    public ResponseEntity<?> getImage(String path) {
         try {
+            if(path==null) {
+                return new ResponseEntity<>(new ErrorResponse(Errors.PATH_IS_EMPTY.getCode(),
+                        Errors.PATH_IS_EMPTY.getMessage()), HttpStatus.BAD_REQUEST); //path is empty
+            }
             Path file = Paths.get(path);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
-                return resource;
+                return new ResponseEntity<>(resource,HttpStatus.OK);
             } else {
-                throw new RuntimeException("FAIL!");
+                return new ResponseEntity<>(new ErrorResponse(Errors.PATH_DOESNOT_EXIST.getCode(),
+                        Errors.PATH_DOESNOT_EXIST.getMessage()), HttpStatus.BAD_REQUEST); //path doesn't exist
             }
         } catch (MalformedURLException e) {
-            throw new RuntimeException("FAIL!");
+            throw new RuntimeException("Image is corrupted"); //image is corrupted
         }
     }
 

@@ -1,10 +1,13 @@
 package com.example.coffeerest.controller;
 
 import com.example.coffeerest.Entity.Product;
+import com.example.coffeerest.exception.ErrorResponse;
+import com.example.coffeerest.exception.Errors;
 import com.example.coffeerest.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,22 +28,20 @@ public class ProductController {
     }
 
     @PostMapping(value = "/add/product")
-    public Product addProduct(@RequestBody Product product){
+    public ResponseEntity<?> addProduct(@RequestBody(required=false) Product product){
         return productService.addProduct(product);
     }
 
     @PostMapping(value = "/add/image")
-    public String addImage(@ModelAttribute MultipartFile image){
+    public ResponseEntity<?> addImage(@ModelAttribute MultipartFile image){
         return productService.addImage(image);
     }
 
-    @GetMapping(value = "/get/image/", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<Resource> getImage(@RequestBody String path) {
-        Resource file = productService.getImage(path);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-                .body(file);
+    @GetMapping(value = "/get/image/",produces = {MediaType.IMAGE_PNG_VALUE,MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> getImage(@RequestBody(required=false) String path) {
+        return productService.getImage(path);
     }
+
 
     @DeleteMapping(value = "/del/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id){
