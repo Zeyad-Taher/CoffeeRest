@@ -6,7 +6,9 @@ import com.example.coffeerest.dto.UserDTO;
 import com.example.coffeerest.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -75,5 +77,14 @@ public class UserService implements UserDetailsService {
         else {
             return null;
         }
+    }
+
+    public UserDTO getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String loginUsername = ((UserDetails) auth.getPrincipal()).getUsername();
+        User user = userRepository.findByUsername(loginUsername);
+        UserDTO userDto=new UserDTO();
+        BeanUtils.copyProperties(user,userDto);
+        return userDto;
     }
 }
