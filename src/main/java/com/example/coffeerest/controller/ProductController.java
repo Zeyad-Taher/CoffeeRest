@@ -1,60 +1,51 @@
 package com.example.coffeerest.controller;
 
 import com.example.coffeerest.Entity.Product;
+import com.example.coffeerest.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.awt.*;
+import java.io.IOException;
+
 
 @RestController
 @RequestMapping("/product/v1")
 public class ProductController {
-    //@Autowired private ProductService productService;
 
-    @GetMapping(value = "/")
-    public List<Product> getAllProduct(){
-        //TODO
+    @Autowired private ProductService productService;
 
-        //DUMMY
-        Random rand = new Random();
-        List <Product> ret = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
-            int randInt = rand.nextInt();
-            Float randFloat = rand.nextFloat();
-
-            randInt = randInt > 0 ? randInt : randInt * -1;
-            randFloat = randFloat > 0 ? randFloat : randFloat * -1;
-
-            randInt %= 1000;
-
-            Product temp = new Product(
-                    "name" + i,
-                    randFloat,
-                    "/static/coffee.jpg",
-                    randFloat,
-                    randFloat,
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                    "red",
-                    randInt,
-                    "coffee"
-            );
-            ret.add(temp);
-        }
-        return ret;
+    @GetMapping(value = "/get/products")
+    public Iterable<Product> getAllProduct(){
+        return productService.getAllProduct();
     }
 
-    @PostMapping(value = "/add")
-    public Product addProduct(@RequestBody Product prod, @RequestParam("image") MultipartFile multipartFile){
-        //TODO
+    @PostMapping(value = "/add/product")
+    public Product addProduct(@RequestBody Product product){
+        return productService.addProduct(product);
+    }
 
-        return prod;
+    @PostMapping(value = "/add/image")
+    public String addImage(@ModelAttribute MultipartFile image){
+        return productService.addImage(image);
+    }
+
+    @GetMapping(value = "/get/image/", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<Resource> getImage(@RequestBody String path) throws IOException {
+        Resource file = productService.getImage(path);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .body(file);
     }
 
     @DeleteMapping(value = "/del/{id}")
     public boolean deleteProduct(@PathVariable Long id){
-        //TODO
-        return true;
+        return productService.deleteProduct(id);
     }
 }
