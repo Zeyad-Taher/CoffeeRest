@@ -3,9 +3,13 @@ package com.example.coffeerest.service;
 import com.example.coffeerest.Entity.User;
 import com.example.coffeerest.dto.UserAuth;
 import com.example.coffeerest.dto.UserDTO;
+import com.example.coffeerest.exception.ErrorResponse;
+import com.example.coffeerest.exception.Errors;
 import com.example.coffeerest.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,13 +49,19 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public UserDTO createNewUser(User user) {
+    public ResponseEntity<?> createNewUser(User user) {
         if(user != null) {
-            UserDTO userDto=new UserDTO();
-            user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
-            user=userRepository.save(user);
-            BeanUtils.copyProperties(user,userDto);
-            return userDto;
+            if(!userRepository.existsByEmail(user.getEmail())){
+                UserDTO userDto=new UserDTO();
+                user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
+                user=userRepository.save(user);
+                BeanUtils.copyProperties(user,userDto);
+                return new ResponseEntity<>(userDto,HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>(new ErrorResponse(Errors.USER_EMAIL_ALREADY_EXIST.getCode(),
+                        Errors.USER_EMAIL_ALREADY_EXIST.getMessage()), HttpStatus.BAD_REQUEST);
+            }
         }
 
         return null;

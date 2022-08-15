@@ -43,12 +43,12 @@ public class ProductController {
     }
 
     @DeleteMapping(value = "/del/{id}")
-    public boolean deleteProduct(@PathVariable Long id){
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id){
         return productService.deleteProduct(id);
     }
 
     @GetMapping(value = "/{id}")
-    public Product getProductByID(@PathVariable Long id){
+    public ResponseEntity<?> getProductByID(@PathVariable Long id){
         return productService.getProductByID(id);
     }
 }

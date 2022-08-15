@@ -1,11 +1,15 @@
 package com.example.coffeerest.service;
 
 import com.example.coffeerest.Entity.Product;
+import com.example.coffeerest.exception.ErrorResponse;
+import com.example.coffeerest.exception.Errors;
 import com.example.coffeerest.repository.ProductRepository;
 import com.example.coffeerest.utility.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,18 +63,26 @@ public class ProductService {
         }
     }
 
-    public boolean deleteProduct(Long id){
-        productRepository.deleteById(id);
-        return true;
+    public ResponseEntity<?> deleteProduct(Long id){
+        Optional<Product> product=productRepository.findById(id);
+        if(product.isPresent()){
+            productRepository.deleteById(id);
+            return new ResponseEntity<>(true,HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(new ErrorResponse(Errors.PRODUCT_NOT_FOUND.getCode(),
+                    Errors.PRODUCT_NOT_FOUND.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    public Product getProductByID(Long id) {
+    public ResponseEntity<?> getProductByID(Long id) {
         Optional<Product> product = productRepository.findById(id);
         if(product.isPresent()){
-            return product.get();
+            return new ResponseEntity<>(product.get(),HttpStatus.OK);
         }
         else{
-            return null;
+            return new ResponseEntity<>(new ErrorResponse(Errors.PRODUCT_NOT_FOUND.getCode(),
+                    Errors.PRODUCT_NOT_FOUND.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 }

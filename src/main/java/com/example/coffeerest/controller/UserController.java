@@ -5,6 +5,7 @@ import com.example.coffeerest.dto.UserAuth;
 import com.example.coffeerest.dto.UserDTO;
 import com.example.coffeerest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/new")
-    public UserDTO createNewUser(@RequestBody User user) {
+    public ResponseEntity<?> createNewUser(@RequestBody User user) {
         return userService.createNewUser(user);
     }
 
