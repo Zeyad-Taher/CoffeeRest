@@ -27,14 +27,14 @@ public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder bcryptPasswordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findUserByEmail(email);
 
         if (user == null)
-            throw new UsernameNotFoundException("User " + username + " Not found");
+            throw new UsernameNotFoundException("Email " + email + " Not found");
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+        return new org.springframework.security.core.userdetails.User(user.getEmail(),
                 user.getPassword(),
                 mapToGrantedAuthorities());
     }
@@ -59,7 +59,7 @@ public class UserService implements UserDetailsService {
 
     public UserDTO login(UserAuth userAuth) {
         if(userAuth!=null){
-            User user=userRepository.findByUsername(userAuth.getUsername());
+            User user=userRepository.findUserByEmail(userAuth.getEmail());
             if(user!=null){
                 if(bcryptPasswordEncoder.matches(userAuth.getPassword(), user.getPassword())){
                     UserDTO userDto=new UserDTO();
@@ -82,7 +82,7 @@ public class UserService implements UserDetailsService {
     public UserDTO getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loginUsername = ((UserDetails) auth.getPrincipal()).getUsername();
-        User user = userRepository.findByUsername(loginUsername);
+        User user = userRepository.findUserByEmail(loginUsername);
         UserDTO userDto=new UserDTO();
         BeanUtils.copyProperties(user,userDto);
         return userDto;
