@@ -59,19 +59,12 @@ public class ProductService {
 
     public ResponseEntity<?> getImage(String path) {
         try {
-            if(path==null) {
-                return new ResponseEntity<>(new ErrorResponse(Errors.PATH_IS_EMPTY.getCode(),
-                        Errors.PATH_IS_EMPTY.getMessage()), HttpStatus.BAD_REQUEST); //path is empty
-            }
+
             Path file = Paths.get(path);
             Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return new ResponseEntity<>(resource,HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(new ErrorResponse(Errors.PATH_DOESNOT_EXIST.getCode(),
-                        Errors.PATH_DOESNOT_EXIST.getMessage()), HttpStatus.BAD_REQUEST); //path doesn't exist
-            }
-        } catch (MalformedURLException e) {
+            return new ResponseEntity<>(resource,HttpStatus.OK);
+        }
+        catch (MalformedURLException e) {
             throw new RuntimeException("Image is corrupted"); //image is corrupted
         }
     }

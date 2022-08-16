@@ -39,7 +39,12 @@ public class ProductController {
 
     @GetMapping(value = "/get/image/",produces = {MediaType.IMAGE_PNG_VALUE,MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> getImage(@RequestBody(required=false) String path) {
-        return productService.getImage(path);
+        if(path==null) {
+            return ResponseEntity.notFound().build();
+        }
+        else {
+            return productService.getImage(path);
+        }
     }
 
 
