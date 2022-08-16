@@ -17,6 +17,7 @@ import java.io.IOException;
 
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/product/v1")
 public class ProductController {
 

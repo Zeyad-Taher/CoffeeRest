@@ -72,7 +72,7 @@ public class UserService implements UserDetailsService {
 
     public UserDTO getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String loginUsername = ((UserDetails) auth.getPrincipal()).getUsername();
+        String loginUsername = (String) auth.getPrincipal();
         User user = userRepository.findUserByEmail(loginUsername);
         UserDTO userDto=new UserDTO();
         BeanUtils.copyProperties(user,userDto);
