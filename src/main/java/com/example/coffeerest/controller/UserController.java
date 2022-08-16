@@ -31,8 +31,6 @@ public class UserController {
         return userService.createNewUser(user);
     }
 
-    @PostMapping(value = "/authenticate")
-    public UserDTO login(@RequestBody UserAuth userAuth){
-        return userService.login(userAuth);
-    }
+    @PostMapping(value = "/login")
+    public void login(@RequestBody UserAuth userAuth){}
 }

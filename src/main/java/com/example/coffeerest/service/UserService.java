@@ -70,28 +70,6 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public UserDTO login(UserAuth userAuth) {
-        if(userAuth!=null){
-            User user=userRepository.findUserByEmail(userAuth.getEmail());
-            if(user!=null){
-                if(bcryptPasswordEncoder.matches(userAuth.getPassword(), user.getPassword())){
-                    UserDTO userDto=new UserDTO();
-                    BeanUtils.copyProperties(user,userDto);
-                    return userDto;
-                }
-                else{
-                    return null;
-                }
-            }
-            else{
-                return null;
-            }
-        }
-        else {
-            return null;
-        }
-    }
-
     public UserDTO getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loginUsername = ((UserDetails) auth.getPrincipal()).getUsername();
