@@ -3,6 +3,7 @@ package com.example.coffeerest.controller;
 import com.example.coffeerest.Entity.User;
 import com.example.coffeerest.dto.UserAuth;
 import com.example.coffeerest.dto.UserDTO;
+import com.example.coffeerest.dto.UserName;
 import com.example.coffeerest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/edit")
-    public ResponseEntity<?> editProfile(@RequestBody(required=false) User user){
+    public ResponseEntity<?> editProfile(@RequestBody(required=false) UserName user){
         return userService.editProfile(user);
     }
 

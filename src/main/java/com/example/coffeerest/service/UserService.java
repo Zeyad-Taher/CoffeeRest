@@ -3,6 +3,7 @@ package com.example.coffeerest.service;
 import com.example.coffeerest.Entity.User;
 import com.example.coffeerest.dto.UserAuth;
 import com.example.coffeerest.dto.UserDTO;
+import com.example.coffeerest.dto.UserName;
 import com.example.coffeerest.exception.ErrorResponse;
 import com.example.coffeerest.exception.Errors;
 import com.example.coffeerest.repository.UserRepository;
@@ -100,9 +101,15 @@ public class UserService implements UserDetailsService {
         return userDto;
     }
 
-    public ResponseEntity<?> editProfile(User user) {
+    public ResponseEntity<?> editProfile(UserName user) {
         if(user != null) {
-            return new ResponseEntity<>(user,HttpStatus.OK);
+            Long userId=getCurrentUser().getId();
+            User newUser=userRepository.findById(userId).get();
+            newUser.setName(user.getName());
+            userRepository.save(newUser);
+            UserDTO userDTO=new UserDTO();
+            BeanUtils.copyProperties(newUser,userDTO);
+            return new ResponseEntity<>(userDTO,HttpStatus.OK);
         }
         else {
             return new ResponseEntity<>(new ErrorResponse(Errors.USER_IS_MISSING.getCode(),
