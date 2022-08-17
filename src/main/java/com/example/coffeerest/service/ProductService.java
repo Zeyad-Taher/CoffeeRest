@@ -29,6 +29,8 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    private static final String PRODUCT_IMAGE_DIR = "static/product/images/";
+
     public Iterable<Product> getAllProduct() {
         return productRepository.findAll();
     }
@@ -56,9 +58,9 @@ public class ProductService {
         Product product = productRepository.findTopByOrderByIdDesc();
         String uploadDir;
         if (product == null)
-            uploadDir = "product-images/" + 1;
+            uploadDir = PRODUCT_IMAGE_DIR + 1;
         else
-            uploadDir = "product-images/" + (product.getId() + 1);
+            uploadDir = PRODUCT_IMAGE_DIR + (product.getId() + 1);
         if (!FileUploadUtil.saveFile(uploadDir, fileName, image)) {
             return new ResponseEntity<>(new ErrorResponse(Errors.FAILED_TO_UPLOAD_IMAGE.getCode(),
                     Errors.FAILED_TO_UPLOAD_IMAGE.getMessage()), HttpStatus.BAD_REQUEST); //failed to upload image
